@@ -1,43 +1,35 @@
-name: Build APK
+name: Build Android APK
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch: # Isse aap button daba kar APK bana sakte hain
 
 jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-    - name: Get Date
-      id: get-date
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Buildozer Dependencies
       run: |
-        echo "date=$(date -u +'%Y%m%d')" >> $GITHUB_OUTPUT
-      shell: bash
+        sudo apt-get update
+        sudo apt-get install -y build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev gdbm-tools liblzma-dev libreadline-dev uuid-dev libffi-dev tk-dev libgmp3-dev libmpfr-dev libmpc-dev android-tools-adb
+        pip install --upgrade pip
+        pip install buildozer cython==0.29.33
 
-    - name: Cache Buildozer global directory
-      uses: actions/cache@v3
-      with:
-        path: ~/.buildozer
-        key: buildozer-global-${{ runner.os }}-${{ steps.get-date.outputs.date }}
-
-    - name: Cache Android SDK/NDK
-      uses: actions/cache@v3
-      with:
-        path: ~/.android
-        key: android-sdk-${{ runner.os }}-${{ steps.get-date.outputs.date }}
-
-    - name: Build with Buildozer
-      uses: up9cloud/action-buildozer@master
-      with:
-        buildozer_version: master
-        command: buildozer -v android debug
-        repository_root: .
+    - name: Build APK with Buildozer
+      run: |
+        # Kyunki buildozer.spec pehle se hai, hum init nahi karenge, sidha build shuru karenge
+        buildozer -v android debug
 
     - name: Upload APK Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: package
+        name: Space-Shooter-APK
         path: bin/*.apk
