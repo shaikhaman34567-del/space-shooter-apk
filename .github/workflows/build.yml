@@ -1,7 +1,7 @@
 name: Build Android APK
 
 on:
-  workflow_dispatch: # Isse aap button daba kar APK bana sakte hain
+  workflow_dispatch: # Isse button dabane par build shuru hogi
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        # Kyunki buildozer.spec pehle se hai, hum init nahi karenge, sidha build shuru karenge
+        # Yeh aapki game.py file ko lekar seedha APK banayega
         buildozer -v android debug
 
     - name: Upload APK Artifact
