@@ -19,13 +19,13 @@ jobs:
     - name: Install Buildozer Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev liblzma-dev libreadline-dev uuid-dev libffi-dev tk-dev libgmp3-dev libmpfr-dev libmpc-dev zip unzip
+        # Graphics aur SDL2 compile karne ke liye saare advanced tools jod diye hain
+        sudo apt-get install -y build-essential ccache git zlib1g-dev libssl-dev libffi-dev libsqlite3-dev libbz2-dev libreadline-dev libgdbm-dev libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev liblzma-dev zip unzip autoconf automake libtool pkg-config cmake patch openjdk-17-jdk
         pip install --upgrade pip
         pip install buildozer cython==0.29.33
 
     - name: Build APK with Buildozer
       run: |
-        # yes | lagane se saare Android licenses automatically accept ho jayenge
         yes | buildozer -v android debug
 
     - name: Upload APK Artifact
